@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhagavad Gita Verse Explorer</title>
+    <link rel="shortcut icon" href="./circle.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --header-color: #1a1a1a;
+            --border-color: #e0e0e0;
+            --accent-color: #c41e3a;
+        }
+
+        .dark-theme {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-color: #ffffff;
+            --border-color: #333333;
+            --accent-color: #ff6b6b;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: background-color 0.3s, color 0.3s;
+            margin: 8px;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2px;
+        }
+
+        header {
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            top: 0;
+            z-index: 1000;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: var(--header-color);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            color: var(--header-color);
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2em;
+            color: var(--header-color);
+            margin-top: 30px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        #chapterNumber {
+            width: 80px;
+        }
+
+        #verseNumber {
+            width: 80px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 1em;
+            background-color: #a51a2d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #verseInfo {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-item strong {
+            color: var(--accent-color);
+        }
+
+        #themeToggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        #navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .more-translations {
+            display: none;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>Bhagavad Gita</h1>
+                <button id="themeToggle" aria-label="Toggle Theme" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <br>
+        <a href="./index.html">Click here for summaries of all the chapters</a>
+    </div>
+    
+    <div class="container">
+        <div class="controls">
+            <div>
+                <input type="number" id="chapterNumber" min="1" max="18" value="1" placeholder="Chapter">
+                <input type="number" id="verseNumber" min="1" value="1" placeholder="Verse">
+                <button onclick="getVerseInfo()">Find</button>
+            </div>
+            <div id="navigation">
+                <button aria-label="Previous Verse" onclick="changeVerse(-1)"><i class="fas fa-chevron-left"></i></button>
+                <button aria-label="Next Verse" onclick="changeVerse(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        <div id="verseInfo"></div>
+        <div class="center-button">
+            <button id="moreButton" onclick="toggleMoreTranslations()">More</button>
+        </div>
+        <div id="moreTranslations" class="more-translations"></div>
+    </div>
+
+
+    <footer>
+        Coded and designed with ❤️ by <a href="https://github.com/ayushsingh-ayushsingh">Ayush Singh</a>
+    </footer>
+    <script>
+        let currentChapter = 1;
+        let currentVerse = 1;
+        let currentTheme = localStorage.getItem('currentTheme') || 'light';
+
+        function saveCurrentVerse(chapterNumber, verseNumber) {
+            localStorage.setItem('lastViewedChapter', chapterNumber);
+            localStorage.setItem('lastViewedVerse', verseNumber);
+            localStorage.setItem('currentTheme', currentTheme);
+        }
+
+        function loadLastViewedVerse() {
+            return {
+                chapter: parseInt(localStorage.getItem('lastViewedChapter')) || 1,
+                verse: parseInt(localStorage.getItem('lastViewedVerse')) || 1
+            };
+        }
+
+        function getVerseInfo() {
+            const chapterNumber = document.getElementById('chapterNumber').value;
+            const verseNumber = document.getElementById('verseNumber').value;
+            if (chapterNumber < 1 || chapterNumber > 18 || verseNumber < 1) {
+                alert("Please enter valid chapter and verse numbers.");
+                return;
+            }
+            fetchVerseInfo(chapterNumber, verseNumber);
+        }
+
+        function fetchVerseInfo(chapterNumber, verseNumber) {
+            fetch(`https://bhagavadgitaapi.in/slok/${chapterNumber}/${verseNumber}/`)
+                .then(response => response.json())
+                .then(data => {
+                    displayVerseInfo(data, chapterNumber, verseNumber);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('verseInfo').innerHTML = '<p>Error fetching verse information. Please try again.</p>';
+                });
+        }
+
+        function displayVerseInfo(verse, chapterNumber, verseNumber) {
+            currentChapter = parseInt(chapterNumber);
+            currentVerse = parseInt(verseNumber);
+            saveCurrentVerse(currentChapter, currentVerse);
+
+            const prabhuTranslation = `
+                <h2>Chapter ${chapterNumber}, Verse ${verseNumber}</h2>
+                <div class="info-item"><strong>Slok:</strong> ${verse.slok}</div>
+                <div class="info-item"><strong>Transliteration:</strong> ${verse.transliteration}</div>
+                <h3>Prabhu Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.prabhu.author}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.prabhu.et}</div>
+                <div class="info-item"><strong>Explanatory Commentary:</strong> ${verse.prabhu.ec}</div>
+            `;
+            document.getElementById('verseInfo').innerHTML = prabhuTranslation;
+
+            const otherTranslations = `
+                <h3>Neel Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.neel.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.neel.sc}</div>
+                <h3>Puru Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.puru.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.puru.sc}</div>
+                <h3>Venkat Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.venkat.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.venkat.sc}</div>
+                <h3>Dhan Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.dhan.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.dhan.sc}</div>
+                <h3>Srid Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.srid.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.srid.sc}</div>
+                <h3>Ms Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.ms.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.ms.sc}</div>
+                <h3>Vallabh Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.vallabh.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.vallabh.sc}</div>
+                <h3>Jaya Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.jaya.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.jaya.sc}</div>
+                <h3>Sankar Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.sankar.author}</div>
+                <div class="info-item"><strong>Historical Text:</strong> ${verse.sankar.ht}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.sankar.sc}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.sankar.et}</div>
+                <h3>Abhinav Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.abhinav.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.abhinav.sc}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.abhinav.et}</div>
+                <h3>Raman Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.raman.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.raman.sc}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.raman.et}</div>
+                <h3>Rams Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.rams.author}</div>
+                <div class="info-item"><strong>Historical Text:</strong> ${verse.rams.ht}</div>
+                <div class="info-item"><strong>Hc:</strong> ${verse.rams.hc}</div>
+                <h3>Anand Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.anand.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.anand.sc}</div>
+                <h3>Madhav Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.madhav.author}</div>
+                <div class="info-item"><strong>Commentry:</strong> ${verse.madhav.sc}</div>
+                <h3>Gambir Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.gambir.author}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.gambir.et}</div>
+                <h3>Adi Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.adi.author}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.adi.et}</div>
+                <h3>San Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.san.author}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.san.et}</div>
+                <h3>Chinmay Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.chinmay.author}</div>
+                <div class="info-item"><strong>Hc:</strong> ${verse.chinmay.hc}</div>
+                <h3>Purohit Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.purohit.author}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.purohit.et}</div>
+                <h3>Siva Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.siva.author}</div>
+                <div class="info-item"><strong>Entry Translation:</strong> ${verse.siva.et}</div>
+                <div class="info-item"><strong>Explanatory Commentary:</strong> ${verse.siva.ec}</div>
+                <h3>Tej Translation</h3>
+                <div class="info-item"><strong>Author:</strong> ${verse.tej.author}</div>
+                <div class="info-item"><strong>Historical Text:</strong> ${verse.tej.ht}</div>
+            `;
+            document.getElementById('moreTranslations').innerHTML = otherTranslations;
+
+            document.getElementById('chapterNumber').value = chapterNumber;
+            document.getElementById('verseNumber').value = verseNumber;
+        }
+
+        function changeVerse(delta) {
+            let newVerse = currentVerse + delta;
+            let newChapter = currentChapter;
+
+            if (newVerse < 1) {
+                newChapter--;
+                if (newChapter < 1) {
+                    newChapter = 18;
+                }
+                newVerse = 1;
+            } else if (newVerse > 100) {
+                newChapter++;
+                if (newChapter > 18) {
+                    newChapter = 1;
+                }
+                newVerse = 1;
+            }
+
+            fetchVerseInfo(newChapter, newVerse);
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark-theme' : 'light';
+            localStorage.setItem('currentTheme', currentTheme);
+            document.body.classList.toggle('dark-theme');
+        }
+
+        function toggleMoreTranslations() {
+            const moreTranslations = document.getElementById('moreTranslations');
+            const moreButton = document.getElementById('moreButton');
+            if (moreTranslations.style.display === 'none' || !moreTranslations.style.display) {
+                moreTranslations.style.display = 'block';
+                moreButton.textContent = 'Less';
+            } else {
+                moreTranslations.style.display = 'none';
+                moreButton.textContent = 'More';
+            }
+        }
+
+        document.body.classList.add(currentTheme);
+
+        const lastViewedVerse = loadLastViewedVerse();
+        fetchVerseInfo(lastViewedVerse.chapter, lastViewedVerse.verse);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('chapterNumber').value = lastViewedVerse.chapter;
+            document.getElementById('verseNumber').value = lastViewedVerse.verse;
+        });
+    </script>
+</body>
+
+</html>
